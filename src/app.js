@@ -1,4 +1,6 @@
 require('dotenv').config()
+
+const ArticlesService = require('./articles-service')
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
@@ -14,6 +16,14 @@ const morganOption = (NODE_ENV === 'production')
 app.use(morgan(morganOption))
 app.use(helmet())
 app.use(cors())
+
+app.get('/articles', (req, res, next) => {
+    ArticlesService.getAllArticles(knexInstance)
+        .then(articles => {
+            res.json(articles)
+        })
+        .catch(next)
+})
 
 app.get('/', (req, res) => {
     res.send('Hello, boilerplate!')
